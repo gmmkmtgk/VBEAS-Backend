@@ -1,3 +1,4 @@
+from google.auth import jwt
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -8,16 +9,17 @@ from google.oauth2 import id_token as googleIdToken
 # Register your models here.
 @api_view(['POST'])
 def authenticate(request):
+    print(request)
     try:
         id_token = request.data["id_token"]
     except KeyError:
-        return Response({"error": "No id_token provided"}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"error": "No id_token provided"}, status=status.HTTP_200_OK)
     
     id_info = googleIdToken.verify_oauth2_token(
         id_token, google_requests.Request())
     if id_info["iss"] not in ["accounts.google.com", "https://accounts.google.com"]:
         return Response(
-            {"error": "Not a valid Google account"}, status=status.HTTP_403_FORBIDDEN
+            {"error": "Not a valid Google account"}, status=status.HTTP_200_OK
         )    
     email = id_info["email"]
     try:
@@ -39,6 +41,6 @@ def authenticate(request):
     print(encoded)
 
     decoded = jwt.decode(encoded, key, algorithms="HS256")
-    print(encoded)
+    print(decoded)
 
 

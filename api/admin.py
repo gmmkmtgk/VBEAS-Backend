@@ -1,4 +1,4 @@
-from api.models import Book, BookSeller
+from api.models import Book, BookSeller, Recommend
 from django.contrib import admin
 
 from import_export import resources, fields
@@ -31,6 +31,7 @@ class BookAdmin(ImportExportActionModelAdmin):
 
 admin.site.register(BookSeller, BookSellerAdmin)
 admin.site.register(Book, BookAdmin)
+admin.site.register(Recommend)
 
 
 

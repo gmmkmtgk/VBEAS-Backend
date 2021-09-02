@@ -77,3 +77,42 @@ class Book(models.Model):
             self.image = "http://covers.openlibrary.org/b/isbn/"+str(self.ISBN)+"-M.jpg"
             self.thumbnail = "http://covers.openlibrary.org/b/isbn/"+str(self.ISBN)+"-S.jpg"
         super().save(*args, **kwargs)
+
+
+class Recommend(models.Model):
+    """
+    Model to save a user's recommendation. 
+    Users can add/delete recommendation from their cart.
+    """
+    MEDIUM_CHOICES = (
+        ("PAPERBACK", "paperback"),
+        ("ELECTRONIC", 'electronic'), 
+    )
+    book = models.ForeignKey(
+        Book,
+        related_name="recommend",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    title = models.CharField(max_length=600, blank=True, null=True)
+    seller_name = models.CharField(max_length=400, blank=True, null=True)
+    author = models.CharField(max_length=800, null=True, blank=True)
+    price = models.CharField(max_length=800, null=True, blank=True)
+    medium = models.CharField(max_length=200, choices=MEDIUM_CHOICES, default= "PAPERBACK")
+    seller = models.ForeignKey(
+        BookSeller,
+        related_name="recommend",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    buyer = models.CharField(max_length=200, blank=True, null = True)
+    email=models.EmailField(max_length=200,null=True)
+    recommended_to_library = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.buyer
+    
